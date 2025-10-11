@@ -1,0 +1,47 @@
+#include <iostream>
+
+using namespace std;
+
+string checksound(string sound){
+   string sounds[] = {"ua","rar","io","mu","iha","tru","grr","pi","hu","be","kwa"};
+   string animals[] ={"malpa","lew","osiol","bizon","kon","slon","tygrys","pingwin","sowa","owca","kaczka"};
+   
+    for(int i = 0; i<sound.length();i++){
+      if (sound[i] >= 'A' && sound[i] <= 'Z') {
+            sound[i] = sound[i] - 'A' + 'a';
+        }
+    }   
+
+    for(int i=0; i<11;i++){
+        if(sound == sounds[i]){
+            return animals[i];
+        
+        }
+           
+    } 
+    return "nie wiem";
+}
+
+
+
+int main(){
+    long n;//11 
+    cin>>n;
+    
+    string word;
+  
+    string * tabl = new string[n];
+    for(long i= 0;i<n;i++){
+        cin>>word;
+        
+        tabl[i]= word;
+    }
+     for(long i= 0;i<n;i++){
+        cout<<checksound(tabl[i])<<endl;
+   
+}
+  
+    delete[] tabl;
+
+    return 0;
+}
