@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cctype>
+#include <string>
+
 
 using namespace std;
 
@@ -11,7 +13,20 @@ bool isLetterAbleToBeMore(char x){
     else return 0;
 }
 
-string removeMoreLetters(string word){//zakladam ze wszystko w stringu to małe litery 
+
+string isSpaceSomewere(string word){
+    
+    for(int i = 0; i<word.length();i++){
+        if(isspace(word[i])){
+                word.substr(i);
+        }
+    }   
+     
+}
+
+
+
+string removeMoreLetters(string word){
     string wordWithoutMoreLetters = "";
     
 
@@ -34,9 +49,7 @@ string removeMoreLetters(string word){//zakladam ze wszystko w stringu to małe 
      return wordWithoutMoreLetters;
 }
 
-string isSpaceSomewere(string word){
-return 0;    
-}
+
 
 string smallLetters(string word){
      for (int i = 0; i < word.length(); i++){
@@ -51,7 +64,6 @@ string removeNotLetters(string word){
     for(int i = 0; i<word.length();i++){
         if(isalpha(word[i])){
             wordOnlyLetters += word[i];
-
         }
     }
     return wordOnlyLetters;
@@ -66,18 +78,14 @@ string checksound(string sound){
    
     sound = removeNotLetters(sound);
     sound = smallLetters(sound);
-   sound = removeMoreLetters(sound);
-
+    sound = removeMoreLetters(sound);
 
 
     for(int i=0; i<zoo;i++){
         if(sound == sounds[i]){
             return animals[i];
-        
-        }
-           
+        }  
     } 
-
     return "nie wiem";
 }
 
@@ -91,7 +99,8 @@ int main(){
   
     string * tabl = new string[n];
     for(long i= 0;i<n;i++){
-        cin>>word;
+       cin>>word;
+        
         
         tabl[i]= word;
     }
