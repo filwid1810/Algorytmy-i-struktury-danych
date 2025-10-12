@@ -3,15 +3,28 @@
 
 using namespace std;
 
+string removeNotLetters(string word){
+    string wordOnlyLetters = "";
+    for(int i = 0; i<word.length();i++){
+        if(isalpha(word[i])){
+            wordOnlyLetters += word[i];
+
+        }
+    }
+    return wordOnlyLetters;
+}
+
 string checksound(string sound){
     int zoo = 11;
    string sounds[] = {"ua","rar","io","mu","iha","tru","grr","pi","hu","be","kwa"};
    string animals[] ={"malpa","lew","osiol","bizon","kon","slon","tygrys","pingwin","sowa","owca","kaczka"};
    
-    for(int i = 0; i<sound.length();i++){
-        if(isalpha(sound[i]) != 0){
-        sound[i] = tolower(sound[i]);}
-    }   
+   sound = removeNotLetters(sound);
+
+   for (int i = 0; i < sound.length(); i++){
+        sound[i] = tolower(sound[i]);
+
+    } 
 
     for(int i=0; i<zoo;i++){
         if(sound == sounds[i]){
