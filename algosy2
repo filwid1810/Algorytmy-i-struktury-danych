@@ -3,6 +3,49 @@
 
 using namespace std;
 
+bool isLetterAbleToBeMore(char x){
+    x = tolower(x);
+    if(x =='a'||x=='e' ||x=='i' ||x=='o'  ||x=='u' ){
+        return 1;
+    }
+    else return 0;
+}
+
+string removeMoreLetters(string word){//zakladam ze wszystko w stringu to małe litery 
+    string wordWithoutMoreLetters = "";
+    
+
+    if (word.length() == 0) {
+        return word;
+    }
+
+    wordWithoutMoreLetters += word[0];
+    
+    for(int i = 1; i<word.length();i++){
+       char last = word[i-1];
+       char curent = word[i];
+
+         if (curent == last && isLetterAbleToBeMore(curent)) {
+            continue;
+        }  
+        wordWithoutMoreLetters += word[i];
+     }
+
+     return wordWithoutMoreLetters;
+}
+
+string isSpaceSomewere(string word){
+return 0;    
+}
+
+string smallLetters(string word){
+     for (int i = 0; i < word.length(); i++){
+        word[i] = tolower(word[i]);
+    } 
+    return word;
+}
+
+
 string removeNotLetters(string word){
     string wordOnlyLetters = "";
     for(int i = 0; i<word.length();i++){
@@ -14,17 +57,18 @@ string removeNotLetters(string word){
     return wordOnlyLetters;
 }
 
+
+
 string checksound(string sound){
     int zoo = 11;
    string sounds[] = {"ua","rar","io","mu","iha","tru","grr","pi","hu","be","kwa"};
    string animals[] ={"malpa","lew","osiol","bizon","kon","slon","tygrys","pingwin","sowa","owca","kaczka"};
    
-   sound = removeNotLetters(sound);
+    sound = removeNotLetters(sound);
+    sound = smallLetters(sound);
+   sound = removeMoreLetters(sound);
 
-   for (int i = 0; i < sound.length(); i++){
-        sound[i] = tolower(sound[i]);
 
-    } 
 
     for(int i=0; i<zoo;i++){
         if(sound == sounds[i]){
@@ -33,6 +77,7 @@ string checksound(string sound){
         }
            
     } 
+
     return "nie wiem";
 }
 
