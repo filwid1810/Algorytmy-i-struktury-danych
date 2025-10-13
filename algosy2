@@ -5,6 +5,8 @@
 
 using namespace std;
 
+string checksound(string sound);
+
 bool isLetterAbleToBeMore(char x){
     x = tolower(x);
     if(x =='a'||x=='e' ||x=='i' ||x=='o'  ||x=='u' ){
@@ -12,18 +14,6 @@ bool isLetterAbleToBeMore(char x){
     }
     else return 0;
 }
-
-
-string isSpaceSomewere(string word){
-    
-    for(int i = 0; i<word.length();i++){
-        if(isspace(word[i])){
-                word.substr(i);
-        }
-    }   
-     
-}
-
 
 
 string removeMoreLetters(string word){
@@ -50,7 +40,6 @@ string removeMoreLetters(string word){
 }
 
 
-
 string smallLetters(string word){
      for (int i = 0; i < word.length(); i++){
         word[i] = tolower(word[i]);
@@ -68,6 +57,8 @@ string removeNotLetters(string word){
     }
     return wordOnlyLetters;
 }
+
+
 
 
 
@@ -90,26 +81,58 @@ string checksound(string sound){
 }
 
 
+string isSpaceSomewere(string word){
+    string current = "";
+    string tab[50];
+    int count = 0;
+
+   
+    for (int i = 0; i < word.length(); i++) {
+        if (!isspace(word[i])) {
+            current += word[i];
+        } else if (current != "") {
+            current = removeNotLetters(current);
+            current = smallLetters(current);
+            if (current != "") {
+                tab[count++] = current;
+            }
+            current = "";
+        }
+    }
+    
+   if (current != "") {
+        current = removeNotLetters(current);
+        current = smallLetters(current);
+        if (current != "") {
+            tab[count++] = current;
+        }
+    }
+
+     if (count == 0) return "nie wiem"; 
+
+
+    string firstAnimal = checksound(tab[0]);
+
+    for (int i = 1; i < count; i++) {
+        string nextAnimal = checksound(tab[i]);
+        if (nextAnimal != firstAnimal) {
+            return "nie wiem"; 
+        }
+    }
+     return firstAnimal;
+}
+
+
 
 int main(){
-    long n;//11 
-    cin>>n;
-    
-    string word;
-  
-    string * tabl = new string[n];
-    for(long i= 0;i<n;i++){
-       cin>>word;
-        
-        
-        tabl[i]= word;
-    }
-     for(long i= 0;i<n;i++){
-        cout<<checksound(tabl[i])<<endl;
-   
-}
-  
-    delete[] tabl;
+   int n;
+    cin >> n;
+    cin.ignore(); 
 
+    string line;
+    for (int i = 0; i < n; i++) {
+        getline(cin, line);
+        cout << isSpaceSomewere(line) << endl;
+    }
     return 0;
 }
