@@ -22,7 +22,7 @@ void ile(Animal *zbior, int animalsAmount, char pierwszaLitera) {
 
 
 void ros(Animal *zbior, int animalsAmount, char pierwszaLitera) {
-int start = 0;
+
     int count = 0;
 
 
@@ -63,39 +63,38 @@ int start = 0;
     delete[] temp;
 }
 void mal(Animal *zbior, int animalsAmount, char pierwszaLitera) {
+    int count = 0;
+    for (int i = 0; i < animalsAmount; i++) {
+        if (zbior[i].gatunek[0] == pierwszaLitera) {
+            count++;
+        }
+    }
+
+    if (count == 0) {
+        cout <<'-'<<'\n';
+        return;
+    }
 
 
-        int count = 0;
-        for (int i = 0; i < animalsAmount; i++) {
-            if (zbior[i].gatunek[0] == pierwszaLitera) {
-                count++;
+    Animal* temp = new Animal[count];
+    int idx = 0;
+    for (int i = 0; i < animalsAmount; i++) {
+        if (zbior[i].gatunek[0] == pierwszaLitera) {
+            temp[idx++] = zbior[i];
+        }
+    }
+
+
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (temp[j].weight < temp[j + 1].weight||temp[j].weight == temp[j + 1].weight) {
+                Animal t = temp[j];
+                temp[j] = temp[j + 1];
+                temp[j + 1] = t;
             }
         }
+    }
 
-        if (count == 0) {
-            cout <<'-'<<'\n';
-            return;
-        }
-
-
-        Animal* temp = new Animal[count];
-        int idx = 0;
-        for (int i = 0; i < animalsAmount; i++) {
-            if (zbior[i].gatunek[0] == pierwszaLitera) {
-                temp[idx++] = zbior[i];
-            }
-        }
-
-
-        for (int i = 0; i < count - 1; i++) {
-            for (int j = 0; j < count - i - 1; j++) {
-                if (temp[j].weight < temp[j + 1].weight) {
-                    Animal t = temp[j];
-                    temp[j] = temp[j + 1];
-                    temp[j + 1] = t;
-                }
-            }
-        }
 
 
         for (int i = 0; i < count; i++) {
@@ -119,8 +118,6 @@ int main() {
     Animal* zbiorGatunkow = new Animal[n];
     int animalsAmount = 0;
 
-
-
     for (int i = 0; i < n; i++) {
        string line;
         getline(cin, line);
@@ -128,8 +125,6 @@ int main() {
 
     int wordsAmount = 0;
     string actual;
-
-
 
     for (size_t j = 0; j<line.size(); j++) {
         if (line[j] == ' ') {
@@ -163,8 +158,6 @@ int main() {
                 ile(zbiorGatunkow, animalsAmount, gatunek[0]);
                 continue;
             }
-
-
             if (komenda[0] == 'r') {
                         ros(zbiorGatunkow, animalsAmount, gatunek[0]);
                         continue;
@@ -173,7 +166,6 @@ int main() {
                 mal(zbiorGatunkow, animalsAmount, gatunek[0]);
                 continue;
             }
-
         }
     }
 
