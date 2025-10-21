@@ -10,23 +10,100 @@ struct Animal {
 
 
 };
-
-void ile(Animal *zbior,int animalsAmount, string gatunek ) {
+void ile(Animal *zbior, int animalsAmount, char pierwszaLitera) {
     int licznik = 0;
     for (int i = 0; i < animalsAmount; i++) {
-        if (zbior[i].gatunek == gatunek) {
+        if (zbior[i].gatunek[0] == pierwszaLitera) {
             licznik++;
         }
     }
-    cout << "Zlapano " << licznik << " zwierzat gatunku " << gatunek << endl;
+    cout << licznik << endl;
+}
 
+
+void ros(Animal *zbior, int animalsAmount, char pierwszaLitera) {
+int start = 0;
+    int count = 0;
+
+
+
+    for (int i = 0; i < animalsAmount; i++) {
+        if (zbior[i].gatunek[0] == pierwszaLitera) {
+
+            count++;
+        }
+    }
+
+    if (count == 0) {
+        cout <<'-'<<'\n';
+        return;
+    }
+
+    Animal* temp = new Animal[count];
+    int idx = 0;
+    for (int i = 0; i < animalsAmount; i++) {
+        if (zbior[i].gatunek[0] == pierwszaLitera) {
+            temp[idx++] = zbior[i];
+        }
+    }
+
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (temp[j].weight > temp[j + 1].weight) {
+                Animal t = temp[j];
+                temp[j] = temp[j + 1];
+                temp[j + 1] = t;
+            }
+        }
+    }
+    for (int i = 0; i < count; i++) {
+        cout<< temp[i].name <<' ';
+    }
+    cout<<'\n';
+    delete[] temp;
 }
-void ros(Animal animal) {
-    cout<< "ros"<<endl;
-}
-void mal(Animal animal) {
-    cout<< "mal"<<endl;
-}
+void mal(Animal *zbior, int animalsAmount, char pierwszaLitera) {
+
+
+        int count = 0;
+        for (int i = 0; i < animalsAmount; i++) {
+            if (zbior[i].gatunek[0] == pierwszaLitera) {
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            cout <<'-'<<'\n';
+            return;
+        }
+
+
+        Animal* temp = new Animal[count];
+        int idx = 0;
+        for (int i = 0; i < animalsAmount; i++) {
+            if (zbior[i].gatunek[0] == pierwszaLitera) {
+                temp[idx++] = zbior[i];
+            }
+        }
+
+
+        for (int i = 0; i < count - 1; i++) {
+            for (int j = 0; j < count - i - 1; j++) {
+                if (temp[j].weight < temp[j + 1].weight) {
+                    Animal t = temp[j];
+                    temp[j] = temp[j + 1];
+                    temp[j + 1] = t;
+                }
+            }
+        }
+
+
+        for (int i = 0; i < count; i++) {
+            cout << temp[i].name << ' ';
+        }
+        cout<<'\n';
+        delete[] temp;
+    }
 
 
 int main() {
@@ -75,29 +152,29 @@ int main() {
             animal.name = words[2];
 
             zbiorGatunkow[animalsAmount++] = animal;
-            cout<<"mamy chuja"<<endl;
+
         }
 
         else if (wordsAmount == 2) {
             string komenda = words[0];
             string gatunek = words[1];
-            bool znaleziono = false;
 
-            if (komenda == "ile") {
-                ile(zbiorGatunkow, animalsAmount, gatunek);
+            if (komenda[0] == 'i') {
+                ile(zbiorGatunkow, animalsAmount, gatunek[0]);
                 continue;
             }
 
-            for (int k = 0; k < animalsAmount; k++) {
-                if (zbiorGatunkow[k].gatunek == gatunek) {
-                    znaleziono = true;
-                    if (komenda == "ros") ros(zbiorGatunkow[k]);
-                    else if (komenda == "mal") mal(zbiorGatunkow[k]);
-                }
+
+            if (komenda[0] == 'r') {
+                        ros(zbiorGatunkow, animalsAmount, gatunek[0]);
+                        continue;
+                    }
+            if (komenda[0] == 'm') {
+                mal(zbiorGatunkow, animalsAmount, gatunek[0]);
+                continue;
             }
 
-    }
-
+        }
     }
 
     delete[] zbiorGatunkow;
