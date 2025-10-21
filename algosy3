@@ -1,0 +1,97 @@
+#include <iostream>
+
+#include <string>
+using namespace std;
+
+struct Animal {
+    string gatunek;
+    int weight;
+    string name;
+
+
+};
+
+void ile(Animal animal) {
+cout<< "ile"<<endl;
+}
+void ros(Animal animal) {
+    cout<< "ros"<<endl;
+}
+void mal(Animal animal) {
+    cout<< "mal"<<endl;
+}
+
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    string animals[] ={"bizon","ara","nosorozec","hipopotam","szympans","gnu","paw","zebra"};
+
+   int n;
+    cin >> n;
+    cin.ignore();
+
+    Animal* zbiorGatunkow = new Animal[n];
+    int animalsAmount = 0;
+
+
+
+    for (int i = 0; i < n; i++) {
+       string line;
+        getline(cin, line);
+    string words[3];
+
+    int wordsAmount = 0;
+    string actual;
+
+
+
+    for (size_t j = 0; j<line.size(); j++) {
+        if (line[j] == ' ') {
+            if (!actual.empty()){
+                words[wordsAmount++] = actual;
+                actual = "";
+            }
+        }else {
+            actual += line[j];
+        }
+    }
+    if (!actual.empty()) {
+        words[wordsAmount++] = actual;
+    }
+
+        if (wordsAmount == 3) {
+            Animal animal;
+            animal.gatunek = words[0];
+            animal.weight = stoi(words[1]);
+            animal.name = words[2];
+
+            zbiorGatunkow[animalsAmount++] = animal;
+            cout<<"mamy chuja"<<endl;
+        }
+
+   else if (wordsAmount ==2) {
+        string komenda = words[0];
+        string gatunek = words[1];
+
+        bool znaleziono = false;
+        for (int k = 0; k <animalsAmount ; k++) {
+            if (zbiorGatunkow[k].gatunek == gatunek) {
+                znaleziono = true;
+                if (komenda == "ros") ros(zbiorGatunkow[k]);
+                else if (komenda == "ile") ile(zbiorGatunkow[k]);
+                else if (komenda == "mal") mal(zbiorGatunkow[k]);
+
+
+            }
+        }
+    }
+
+    }
+
+    delete[] zbiorGatunkow;
+
+
+    return 0;
+}
