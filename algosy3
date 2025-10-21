@@ -11,8 +11,15 @@ struct Animal {
 
 };
 
-void ile(Animal animal) {
-cout<< "ile"<<endl;
+void ile(Animal *zbior,int animalsAmount, string gatunek ) {
+    int licznik = 0;
+    for (int i = 0; i < animalsAmount; i++) {
+        if (zbior[i].gatunek == gatunek) {
+            licznik++;
+        }
+    }
+    cout << "Zlapano " << licznik << " zwierzat gatunku " << gatunek << endl;
+
 }
 void ros(Animal animal) {
     cout<< "ros"<<endl;
@@ -71,21 +78,24 @@ int main() {
             cout<<"mamy chuja"<<endl;
         }
 
-   else if (wordsAmount ==2) {
-        string komenda = words[0];
-        string gatunek = words[1];
+        else if (wordsAmount == 2) {
+            string komenda = words[0];
+            string gatunek = words[1];
+            bool znaleziono = false;
 
-        bool znaleziono = false;
-        for (int k = 0; k <animalsAmount ; k++) {
-            if (zbiorGatunkow[k].gatunek == gatunek) {
-                znaleziono = true;
-                if (komenda == "ros") ros(zbiorGatunkow[k]);
-                else if (komenda == "ile") ile(zbiorGatunkow[k]);
-                else if (komenda == "mal") mal(zbiorGatunkow[k]);
-
-
+            if (komenda == "ile") {
+                ile(zbiorGatunkow, animalsAmount, gatunek);
+                continue;
             }
-        }
+
+            for (int k = 0; k < animalsAmount; k++) {
+                if (zbiorGatunkow[k].gatunek == gatunek) {
+                    znaleziono = true;
+                    if (komenda == "ros") ros(zbiorGatunkow[k]);
+                    else if (komenda == "mal") mal(zbiorGatunkow[k]);
+                }
+            }
+
     }
 
     }
