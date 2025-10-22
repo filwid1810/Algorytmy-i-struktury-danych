@@ -9,93 +9,71 @@ struct Animal {
     string name;
 };
 
-int collectByLetter(const Animal* zbior, int animalsAmount, char litera, Animal* temp) {
-    int count = 0;
-    for (int i = 0; i < animalsAmount; i++) {
-        if (zbior[i].gatunek[0] == litera) {
-            temp[count++] = zbior[i];
-        }
-    }
-    return count;
-}
 
-void ile(const Animal *zbior, int animalsAmount, char firstLetter) {
+int ile(const Animal *zbior, int animalsAmount, char firstLetter, const Animal **temp = nullptr) {
     int licznik = 0;
     for (int i = 0; i < animalsAmount; i++) {
         if (zbior[i].gatunek[0] == firstLetter) {
+            if (temp) {
+                temp[licznik] = &zbior[i];
+            }
             licznik++;
         }
     }
-    cout << licznik << '\n';
+
+    return licznik;
 }
 
+void insertionSort(const Animal *arr[], int n, bool ascending) {
+    for (int i = 1; i < n; i++) {
+        const Animal *key = arr[i];
+        int j = i - 1;
+
+        if (ascending) {
+            while (j >= 0 && arr[j]->weight > key->weight) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+        } else {
+            while (j >= 0 && arr[j]->weight <= key->weight) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+        }
+        arr[j + 1] = key;
+    }
+}
+
+
+void sortujIWypisz(const Animal *zbior, int animalsAmount, char litera, bool ascending) {
+    const Animal *temp[10000];
+    int count = ile(zbior, animalsAmount, litera, temp);
+
+    if (count == 0) {
+        cout << "-\n";
+        return;
+    }
+
+    insertionSort(temp, count, ascending);
+
+    for (int i = 0; i < count; i++)
+        cout << temp[i]->name << ' ';
+    cout << '\n';
+}
 
 
 void ros(const Animal *zbior, int animalsAmount, char pierwszaLitera) {
-Animal temp[10000];
-
-   int count = collectByLetter(zbior, animalsAmount, pierwszaLitera, temp);
-
-    if (count == 0) {
-        cout <<"-\n";
-        return;
-    }
-
-
-
-
-    for (int i = 1; i < count; i++) {
-        Animal key = temp[i];
-        int j = i - 1;
-        while (j >= 0 && temp[j].weight > key.weight) {
-            temp[j + 1] = temp[j];
-            j--;
-        }
-        temp[j + 1] = key;
-    }
-
-    for (int i = 0; i < count; i++)
-        cout << temp[i].name << ' ';
-    cout << '\n';
-
-
+    sortujIWypisz(zbior, animalsAmount, pierwszaLitera, true);
 }
-
 void mal(const Animal *zbior, int animalsAmount, char pierwszaLitera) {
-
-    Animal temp[10000];
-    int count = collectByLetter(zbior, animalsAmount, pierwszaLitera, temp);
-
-    if (count == 0) {
-        cout <<'-'<<'\n';
-        return;
-    }
-
-    
-    for (int i = 1; i < count; i++) {
-        Animal key = temp[i];
-        int j = i - 1;
-        while (j >= 0 && temp[j].weight <= key.weight) {
-            temp[j + 1] = temp[j];
-            j--;
-        }
-        temp[j + 1] = key;
-    }
-
-    for (int i = 0; i < count; i++)
-        cout << temp[i].name << ' ';
-    cout << '\n';
-
-
+    sortujIWypisz(zbior, animalsAmount, pierwszaLitera, false);
 }
 
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-
-
-    string animals[] ={"bizon","ara","nosorozec","hipopotam","szympans","gnu","paw","zebra"};
+    std::cout.tie(nullptr);
 
    int n;
     cin >> n;
@@ -138,18 +116,18 @@ int main() {
         }
 
         else if (wordsAmount == 2) {
-            char komenda = words[0][0];
+            char command = words[0][0];
             char gatunek = words[1][0];
 
-            if (komenda == 'i') {
-                ile(zbiorGatunkow, animalsAmount, gatunek);
+            if (command == 'i') {
+              cout<<  ile(zbiorGatunkow, animalsAmount, gatunek)<<'\n';
                 continue;
             }
-            if (komenda == 'r') {
+            if (command == 'r') {
                         ros(zbiorGatunkow, animalsAmount, gatunek);
                         continue;
                     }
-            if (komenda == 'm') {
+            if (command == 'm') {
                 mal(zbiorGatunkow, animalsAmount, gatunek);
             }
         }
