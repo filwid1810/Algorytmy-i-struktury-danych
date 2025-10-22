@@ -20,6 +20,32 @@ int ile(const Animal *zbior, int animalsAmount, char firstLetter, const Animal *
     return licznik;
 }
 
+void insertionSortMal(const Animal *arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        const Animal *key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j]->weight <= key->weight) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+void insertionSortRos(const Animal *arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        const Animal *key = arr[i];
+        int j = i - 1;
+
+            while (j >= 0 && arr[j]->weight > key->weight) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+
+        arr[j + 1] = key;
+    }
+}
+
 void sortAndWrite(const Animal zbior[], int animalsAmount, char litera, bool ascending) {
     const Animal *temp[10000];
     int count = ile(zbior, animalsAmount, litera, temp);
@@ -28,22 +54,10 @@ void sortAndWrite(const Animal zbior[], int animalsAmount, char litera, bool asc
         cout << "-\n";
         return;
     }
- for (int i = 1; i < count; i++) {
-        const Animal *key = temp[i];
-        int j = i - 1;
-
-        if (ascending) {
-            while (j >= 0 && temp[j]->weight > key->weight) {
-                temp[j + 1] = temp[j];
-                j--;
-            }
-        } else {
-            while (j >= 0 && temp[j]->weight <= key->weight) {
-                temp[j + 1] = temp[j];
-                j--;
-            }
-        }
-        temp[j + 1] = key;
+    if (ascending )
+         insertionSortRos( temp,count);
+    else {
+        insertionSortMal(temp, count);
     }
 
 
