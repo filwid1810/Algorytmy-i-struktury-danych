@@ -1,6 +1,6 @@
 #include <iostream>
-
 #include <string>
+
 using namespace std;
 
 struct Animal {
@@ -9,43 +9,18 @@ struct Animal {
     string name;
 };
 
-
-int ile(const Animal *zbior, int animalsAmount, char firstLetter, const Animal **temp = nullptr) {
+int ile(const Animal *zbior, int animalsAmount, char firstLetter, const Animal *temp[] = nullptr) {
     int licznik = 0;
     for (int i = 0; i < animalsAmount; i++) {
         if (zbior[i].gatunek[0] == firstLetter) {
-            if (temp) {
-                temp[licznik] = &zbior[i];
-            }
+            if (temp) temp[licznik] = &zbior[i];
             licznik++;
         }
     }
-
     return licznik;
 }
 
-void insertionSort(const Animal *arr[], int n, bool ascending) {
-    for (int i = 1; i < n; i++) {
-        const Animal *key = arr[i];
-        int j = i - 1;
-
-        if (ascending) {
-            while (j >= 0 && arr[j]->weight > key->weight) {
-                arr[j + 1] = arr[j];
-                j--;
-            }
-        } else {
-            while (j >= 0 && arr[j]->weight <= key->weight) {
-                arr[j + 1] = arr[j];
-                j--;
-            }
-        }
-        arr[j + 1] = key;
-    }
-}
-
-
-void sortujIWypisz(const Animal *zbior, int animalsAmount, char litera, bool ascending) {
+void sortAndWrite(const Animal zbior[], int animalsAmount, char litera, bool ascending) {
     const Animal *temp[10000];
     int count = ile(zbior, animalsAmount, litera, temp);
 
@@ -53,8 +28,24 @@ void sortujIWypisz(const Animal *zbior, int animalsAmount, char litera, bool asc
         cout << "-\n";
         return;
     }
+ for (int i = 1; i < count; i++) {
+        const Animal *key = temp[i];
+        int j = i - 1;
 
-    insertionSort(temp, count, ascending);
+        if (ascending) {
+            while (j >= 0 && temp[j]->weight > key->weight) {
+                temp[j + 1] = temp[j];
+                j--;
+            }
+        } else {
+            while (j >= 0 && temp[j]->weight <= key->weight) {
+                temp[j + 1] = temp[j];
+                j--;
+            }
+        }
+        temp[j + 1] = key;
+    }
+
 
     for (int i = 0; i < count; i++)
         cout << temp[i]->name << ' ';
@@ -62,77 +53,54 @@ void sortujIWypisz(const Animal *zbior, int animalsAmount, char litera, bool asc
 }
 
 
-void ros(const Animal *zbior, int animalsAmount, char pierwszaLitera) {
-    sortujIWypisz(zbior, animalsAmount, pierwszaLitera, true);
+void ros(const Animal zbior[], int animalsAmount, char pierwszaLitera) {
+    sortAndWrite(zbior, animalsAmount, pierwszaLitera, true);
 }
-void mal(const Animal *zbior, int animalsAmount, char pierwszaLitera) {
-    sortujIWypisz(zbior, animalsAmount, pierwszaLitera, false);
+void mal(const Animal zbior[], int animalsAmount, char pierwszaLitera) {
+    sortAndWrite(zbior, animalsAmount, pierwszaLitera, false);
 }
 
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    std::cout.tie(nullptr);
 
-   int n;
+    int n;
     cin >> n;
-    cin.ignore();
 
     Animal zbiorGatunkow[10000];
     int animalsAmount = 0;
 
     for (int i = 0; i < n; i++) {
-       string line;
-        getline(cin, line);
-    string words[3];
+        char word1[50], word2[50];
 
-    int wordsAmount = 0;
-    string actual;
 
-    for (int j = 0; j<line.size(); j++) {
-        if (line[j] == ' ') {
-            if (!actual.empty()){
-                words[wordsAmount++] = actual;
-                actual = "";
-            }
-        }else {
-            actual += line[j];
-        }
-    }
+        cin >> word1;
 
-    if (!actual.empty()) {
-        words[wordsAmount++] = actual;
-    }
 
-        if (wordsAmount == 3) {
-            Animal animal;
-            animal.gatunek = words[0];
-            animal.weight = stoi(words[1]);
-            animal.name = words[2];
+        if (word1[0] == 'i' || word1[0] == 'r' || word1[0] == 'm') {
+            cin >> word2;
+            char command = word1[0];
+            char gatunek = word2[0];
 
-            zbiorGatunkow[animalsAmount++] = animal;
-
-        }
-
-        else if (wordsAmount == 2) {
-            char command = words[0][0];
-            char gatunek = words[1][0];
-
-            if (command == 'i') {
-              cout<<  ile(zbiorGatunkow, animalsAmount, gatunek)<<'\n';
-                continue;
-            }
-            if (command == 'r') {
-                        ros(zbiorGatunkow, animalsAmount, gatunek);
-                        continue;
-                    }
-            if (command == 'm') {
+            if (command == 'i')
+                cout << ile(zbiorGatunkow, animalsAmount, gatunek) << '\n';
+            else if (command == 'r')
+                ros(zbiorGatunkow, animalsAmount, gatunek);
+            else if (command == 'm')
                 mal(zbiorGatunkow, animalsAmount, gatunek);
-            }
+        }
+        else {
+            int weight = 0;
+
+            cin >> weight >> word2;
+            Animal a;
+            a.gatunek = word1;
+            a.weight = weight;
+            a.name = word2;
+            zbiorGatunkow[animalsAmount++] = a;
         }
     }
-
 
     return 0;
 }
