@@ -7,13 +7,22 @@ struct Animal {
     string gatunek;
     int weight;
     string name;
-
-
 };
-void ile(Animal *zbior, int animalsAmount, char pierwszaLitera) {
+
+int collectByLetter(const Animal* zbior, int animalsAmount, char litera, Animal* temp) {
+    int count = 0;
+    for (int i = 0; i < animalsAmount; i++) {
+        if (zbior[i].gatunek[0] == litera) {
+            temp[count++] = zbior[i];
+        }
+    }
+    return count;
+}
+
+void ile(const Animal *zbior, int animalsAmount, char firstLetter) {
     int licznik = 0;
     for (int i = 0; i < animalsAmount; i++) {
-        if (zbior[i].gatunek[0] == pierwszaLitera) {
+        if (zbior[i].gatunek[0] == firstLetter) {
             licznik++;
         }
     }
@@ -21,102 +30,78 @@ void ile(Animal *zbior, int animalsAmount, char pierwszaLitera) {
 }
 
 
-void ros(Animal *zbior, int animalsAmount, char pierwszaLitera) {
 
-    int count = 0;
+void ros(const Animal *zbior, int animalsAmount, char pierwszaLitera) {
+Animal temp[10000];
 
-
-
-    for (int i = 0; i < animalsAmount; i++) {
-        if (zbior[i].gatunek[0] == pierwszaLitera) {
-
-            count++;
-        }
-    }
+   int count = collectByLetter(zbior, animalsAmount, pierwszaLitera, temp);
 
     if (count == 0) {
-        cout <<'-'<<'\n';
+        cout <<"-\n";
         return;
     }
 
-    Animal* temp = new Animal[count];
-    int idx = 0;
-    for (int i = 0; i < animalsAmount; i++) {
-        if (zbior[i].gatunek[0] == pierwszaLitera) {
-            temp[idx++] = zbior[i];
+
+
+
+    for (int i = 1; i < count; i++) {
+        Animal key = temp[i];
+        int j = i - 1;
+        while (j >= 0 && temp[j].weight > key.weight) {
+            temp[j + 1] = temp[j];
+            j--;
         }
+        temp[j + 1] = key;
     }
 
-    for (int i = 0; i < count - 1; i++) {
-        for (int j = 0; j < count - i - 1; j++) {
-            if (temp[j].weight > temp[j + 1].weight) {
-                Animal t = temp[j];
-                temp[j] = temp[j + 1];
-                temp[j + 1] = t;
-            }
-        }
-    }
-    for (int i = 0; i < count; i++) {
-        cout<< temp[i].name <<' ';
-    }
-    cout<<'\n';
-    delete[] temp;
+    for (int i = 0; i < count; i++)
+        cout << temp[i].name << ' ';
+    cout << '\n';
+
+
 }
-void mal(Animal *zbior, int animalsAmount, char pierwszaLitera) {
-    int count = 0;
-    for (int i = 0; i < animalsAmount; i++) {
-        if (zbior[i].gatunek[0] == pierwszaLitera) {
-            count++;
-        }
-    }
+
+void mal(const Animal *zbior, int animalsAmount, char pierwszaLitera) {
+
+    Animal temp[10000];
+    int count = collectByLetter(zbior, animalsAmount, pierwszaLitera, temp);
 
     if (count == 0) {
         cout <<'-'<<'\n';
         return;
     }
 
-
-    Animal* temp = new Animal[count];
-    int idx = 0;
-    for (int i = 0; i < animalsAmount; i++) {
-        if (zbior[i].gatunek[0] == pierwszaLitera) {
-            temp[idx++] = zbior[i];
+    
+    for (int i = 1; i < count; i++) {
+        Animal key = temp[i];
+        int j = i - 1;
+        while (j >= 0 && temp[j].weight <= key.weight) {
+            temp[j + 1] = temp[j];
+            j--;
         }
+        temp[j + 1] = key;
     }
 
-
-    for (int i = 0; i < count - 1; i++) {
-        for (int j = 0; j < count - i - 1; j++) {
-            if (temp[j].weight < temp[j + 1].weight||temp[j].weight == temp[j + 1].weight) {
-                Animal t = temp[j];
-                temp[j] = temp[j + 1];
-                temp[j + 1] = t;
-            }
-        }
-    }
+    for (int i = 0; i < count; i++)
+        cout << temp[i].name << ' ';
+    cout << '\n';
 
 
-
-        for (int i = 0; i < count; i++) {
-            cout << temp[i].name << ' ';
-        }
-        cout<<'\n';
-        delete[] temp;
-    }
+}
 
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    char  lett[] = {'b','a','n','h','s','g','p','z'};
+
     string animals[] ={"bizon","ara","nosorozec","hipopotam","szympans","gnu","paw","zebra"};
 
    int n;
     cin >> n;
     cin.ignore();
 
-    Animal* zbiorGatunkow = new Animal[n];
+    Animal zbiorGatunkow[10000];
     int animalsAmount = 0;
 
     for (int i = 0; i < n; i++) {
@@ -127,7 +112,7 @@ int main() {
     int wordsAmount = 0;
     string actual;
 
-    for (size_t j = 0; j<line.size(); j++) {
+    for (int j = 0; j<line.size(); j++) {
         if (line[j] == ' ') {
             if (!actual.empty()){
                 words[wordsAmount++] = actual;
@@ -137,6 +122,7 @@ int main() {
             actual += line[j];
         }
     }
+
     if (!actual.empty()) {
         words[wordsAmount++] = actual;
     }
@@ -152,25 +138,22 @@ int main() {
         }
 
         else if (wordsAmount == 2) {
-            string komenda = words[0];
-            string gatunek = words[1];
+            char komenda = words[0][0];
+            char gatunek = words[1][0];
 
-            if (komenda[0] == 'i') {
-                ile(zbiorGatunkow, animalsAmount, gatunek[0]);
+            if (komenda == 'i') {
+                ile(zbiorGatunkow, animalsAmount, gatunek);
                 continue;
             }
-            if (komenda[0] == 'r') {
-                        ros(zbiorGatunkow, animalsAmount, gatunek[0]);
+            if (komenda == 'r') {
+                        ros(zbiorGatunkow, animalsAmount, gatunek);
                         continue;
                     }
-            if (komenda[0] == 'm') {
-                mal(zbiorGatunkow, animalsAmount, gatunek[0]);
-                continue;
+            if (komenda == 'm') {
+                mal(zbiorGatunkow, animalsAmount, gatunek);
             }
         }
     }
-
-    delete[] zbiorGatunkow;
 
 
     return 0;
