@@ -17,7 +17,7 @@ void ile(Animal *zbior, int animalsAmount, char pierwszaLitera) {
             licznik++;
         }
     }
-    cout << licznik << endl;
+    cout << licznik << '\n';
 }
 
 
@@ -109,6 +109,7 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 
+    char  lett[] = {'b','a','n','h','s','g','p','z'};
     string animals[] ={"bizon","ara","nosorozec","hipopotam","szympans","gnu","paw","zebra"};
 
    int n;
