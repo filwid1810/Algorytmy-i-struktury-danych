@@ -3,116 +3,101 @@
 
 using namespace std;
 
+const int MAX_ANIMALS = 10000;
+const int NUM_SPECIES = 8;
+const string speciesGat[NUM_SPECIES] = {"bizon", "ara", "nosorozec", "hipopotam", "szympans", "gnu", "paw", "zebra"};
+
 struct Animal {
-    string gatunek;
     int weight;
-    string name;
+    char name[11];
 };
 
-int ile(const Animal *zbior, int animalsAmount, char firstLetter, const Animal *temp[] = nullptr) {
-    int licznik = 0;
-    for (int i = 0; i < animalsAmount; i++) {
-        if (zbior[i].gatunek[0] == firstLetter) {
-            if (temp) temp[licznik] = &zbior[i];
-            licznik++;
+struct Species {
+    Animal arr[MAX_ANIMALS];
+    int size = 0;
+
+    void insertionsort(const Animal &a) {
+        int i = size - 1;
+
+        while (i >= 0 && arr[i].weight > a.weight) {
+            arr[i + 1] = arr[i];
+            i--;
         }
+        arr[i + 1] = a;
+        size++;
     }
-    return licznik;
-}
 
-void insertionSortRos(const Animal* arr[], int n) {
-
-    for (int i = 1; i < n; i++) {
-        const Animal* key = arr[i];
-        int j = i - 1;
-        while (j >= 0 && arr[j]->weight > key->weight) {
-            arr[j + 1] = arr[j];
-            j--;
+    void print() {
+        if (size == 0) {
+            cout << "-\n";
+            return;
         }
-        arr[j + 1] = key;
+        for (int i = 0; i < size; i++)
+            cout << arr[i].name << ' ';
+        cout << '\n';
     }
-}
 
-void insertionSortMal(const Animal* arr[], int n) {
-
-    for (int i = 1; i < n; i++) {
-        const Animal* key = arr[i];
-        int j = i - 1;
-
-
-        while (j >= 0 && arr[j]->weight <= key->weight) {
-            arr[j + 1] = arr[j];
-            j--;
+    void printReverse() {
+        if (size == 0) {
+            cout << "-\n";
+            return;
         }
-        arr[j + 1] = key;
+        for (int i = size - 1; i >= 0; i--)
+            cout << arr[i].name << ' ';
+        cout << '\n';
     }
-}
+};
 
-void sortAndWrite(const Animal zbior[], int animalsAmount, char litera, bool ascending) {
-    const Animal *temp[10000];
-    int count = ile(zbior, animalsAmount, litera, temp);
-
-    if (count == 0) {
-        cout << "-\n";
-        return;
+int speciesIndex(const string &gat) {
+    for (int i = 0; i < NUM_SPECIES; i++) {
+        if (speciesGat[i] == gat)
+            return i;
     }
-    if (ascending )
-         insertionSortRos( temp,count);
-    else {
-        insertionSortMal(temp, count);
-    }
-
-
-    for (int i = 0; i < count; i++)
-        cout << temp[i]->name << ' ';
-    cout << '\n';
+    return -1;
 }
-
-
-void ros(const Animal zbior[], int animalsAmount, char pierwszaLitera) {
-    sortAndWrite(zbior, animalsAmount, pierwszaLitera, true);
-}
-void mal(const Animal zbior[], int animalsAmount, char pierwszaLitera) {
-    sortAndWrite(zbior, animalsAmount, pierwszaLitera, false);
-}
-
-
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 
     int n;
     cin >> n;
-
-    Animal zbiorGatunkow[10000];
-    int animalsAmount = 0;
+    Species species[NUM_SPECIES];
 
     for (int i = 0; i < n; i++) {
-       string word1, word2;
-
-
+        string word1;
+        string word2;
         cin >> word1;
 
+        char c = word1[0];
 
-        if (word1[0] == 'i' || word1[0] == 'r' || word1[0] == 'm') {
+        if (c == 'i' || c == 'r' || c == 'm') {
             cin >> word2;
-            char command = word1[0];
-            char gatunek = word2[0];
+            int count = speciesIndex(word2);
+            if (count == -1) continue;
 
-            if (command == 'i')
-                cout << ile(zbiorGatunkow, animalsAmount, gatunek) << '\n';
-            else if (command == 'r')
-                ros(zbiorGatunkow, animalsAmount, gatunek);
-            else if (command == 'm')
-                mal(zbiorGatunkow, animalsAmount, gatunek);
+            if (c == 'i') {
+                cout << species[count].size << '\n';
+            } else if (c == 'r') {
+                species[count].print();
+            } else {
+                species[count].printReverse();
+            }
         }
         else {
-            int weight = 0;
-
+            int weight;
             cin >> weight >> word2;
-            zbiorGatunkow[animalsAmount++] = {word1, weight, word2};
+            int idx = speciesIndex(word1);
+            if (idx == -1) continue;
+            Animal a;
+            a.weight = weight;
+            int j = 0;
+            for (; word2[j] && j < 10; j++) {
+                a.name[j] = word2[j];
+            }
+            a.name[j] = '\0';
+
+            species[idx].insertionsort(a);
         }
     }
-
     return 0;
 }
